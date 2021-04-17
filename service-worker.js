@@ -4,8 +4,8 @@ self.addEventListener('install', event => {
       caches.open('static').then( cache => {
         return cache.addAll([
           './',
-          './index.html',
-          './db.js',
+          './public/index.html',
+          './public/index.js',
           './public/style.css',
           './public/icons/icon-192x192.png',
           './public/icons/icon-512x512.png',
