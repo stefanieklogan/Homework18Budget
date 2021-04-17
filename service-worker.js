@@ -9,6 +9,7 @@ self.addEventListener('install', event => {
           './public/style.css',
           './public/icons/icon-192x192.png',
           './public/icons/icon-512x512.png',
+          './public/manifest.webmanifest',
         ]);
       })
     );
