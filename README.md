@@ -31,6 +31,8 @@
 
 * mongoose
 
+* lite-server
+
 <a name="install"></a>
 ## Installation
 
@@ -45,7 +47,7 @@
 <a name="notes"></a>
 ## Notes
 
-* Future development includes.....
+* Future development includes xxxxxxxxxxxxxxxxxxxxxxxxxx
 
 <a name="streetcred"></a>
 ## The other stuff: License & Badges

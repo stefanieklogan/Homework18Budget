@@ -1,0 +1,8 @@
+{
+    "name": "Budge PWA",
+    "short_name": "Budget PWA",
+    "start_url": "/",
+    "background_color": "#dddddd",
+    "theme_color": "#dddddd",
+    "display": "standalone"
+}
