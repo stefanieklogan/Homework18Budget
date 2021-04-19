@@ -4,7 +4,7 @@ const FILES_TO_CACHE = [
   './',
   './index.html',
   './index.js',
-  './style.css',
+  './styles.css',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   './manifest.webmanifest',
@@ -18,7 +18,7 @@ self.addEventListener("install", e => {
 
 });
 
-// remove old cache data & activate
+// activate
 self.addEventListener("activate", e => {
   const currentCaches = [STATIC_CACHE, RUNTIME_CACHE];
   e.waitUntil(
@@ -43,7 +43,6 @@ self.addEventListener("activate", e => {
 
 // fetch
 self.addEventListener("fetch", e => {
-  // non GET requests are not cached and requests to other origins are not cached
   if (
     e.request.method !== "GET" ||
     !e.request.url.startsWith(self.location.origin)
