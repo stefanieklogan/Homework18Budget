@@ -19,9 +19,9 @@ self.addEventListener("install", e => {
 });
 
 // remove old cache data & activate
-self.addEventListener("activate", event => {
+self.addEventListener("activate", e => {
   const currentCaches = [STATIC_CACHE, RUNTIME_CACHE];
-  event.waitUntil(
+  e.waitUntil(
     caches
       .keys()
       .then(cacheNames => {
@@ -43,33 +43,43 @@ self.addEventListener("activate", event => {
 
 // fetch
 self.addEventListener("fetch", e => {
+    if (
+      e.request.method !== "GET" || !e.request.url.startsWith(self.location.origin)
+    ) {
+      e.respondWith(fetch(e.request));
+      return;
+    }
+  })
+
   if (e.request.url.includes("/api/transaction")) {
+    // make network request and fallback to cache if network request fails (offline)
     e.respondWith(
       caches.open(RUNTIME_CACHE).then(cache => {
         return fetch(e.request)
           .then(response => {
-            // If the response was good, clone it and store it in the cache.
-            if (response.status === 200) {
-              cache.put(e.request, response.clone());
-            }
-
+            cache.put(e.request, response.clone());
             return response;
           })
-          .catch(err => {
-            // Network request failed, try to get it from the cache.
-            return cache.match(e.request);
-          });
-      }).catch(err => console.log(err))
+          .catch(() => caches.match(e.request));
+      })
     );
-
     return;
   }
 
+  // use cache first for all other requests for performance
   e.respondWith(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.match(e.request).then(response => {
-        return response || fetch(e.request);
+    caches.match(e.request).then(cachedResponse => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      // request is not in cache. make network request and cache the response
+      return caches.open(RUNTIME_CACHE).then(cache => {
+        return fetch(e.request).then(response => {
+          return cache.put(e.request, response.clone()).then(() => {
+            return response;
+          });
+        });
       });
     })
   );
-});
