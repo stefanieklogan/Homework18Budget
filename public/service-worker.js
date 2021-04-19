@@ -3,6 +3,7 @@ const RUNTIME_CACHE = "runtime-cache-v1";
 const FILES_TO_CACHE = [
   './',
   './index.html',
+  './db.js',
   './index.js',
   './styles.css',
   './icons/icon-192x192.png',
@@ -52,7 +53,7 @@ self.addEventListener("fetch", e => {
   }
 
   // handle runtime GET requests for data from /api routes
-  if (e.request.url.includes("/api/transaction")) {
+  if (e.request.url.includes("/api")) {
     // make network request and fallback to cache if network request fails (offline)
     e.respondWith(
       caches.open(RUNTIME_CACHE).then(cache => {
