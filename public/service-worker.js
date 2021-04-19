@@ -1,7 +1,5 @@
-const apiTransaction = require(".index.js");
-
-const CACHE_NAME = "static-cache-v2";
-const DATA_CACHE_NAME = "data-cache-v1";
+const STATIC_CACHE = "static-cache-v1";
+const RUNTIME_CACHE = "runtime-cache-v1";
 const FILES_TO_CACHE = [
   './',
   './index.html',
@@ -13,25 +11,16 @@ const FILES_TO_CACHE = [
 ];
 
 // install
-self.addEventListener("install", function (evt) {
-  // pre cache image data
-  evt.waitUntil(
-    caches.open(DATA_CACHE_NAME).then((cache) => cache.add("/api/transaction"))
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open(STATIC_CACHE).then(cache => cache.addAll(FILES_TO_CACHE)).then(() => self.skipWaiting())
   );
 
-  // pre cache all static assets
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
-  );
-
-  // tell the browser to activate this service worker immediately once it
-  // has finished installing
-  self.skipWaiting();
 });
 
 // activate
-self.addEventListener("activate", function (evt) {
-  evt.waitUntil(
+self.addEventListener("activate", e => {
+  e.waitUntil(
     caches.keys().then(keyList => {
       return Promise.all(
         keyList.map(key => {
@@ -48,22 +37,22 @@ self.addEventListener("activate", function (evt) {
 });
 
 // fetch
-self.addEventListener("fetch", function (evt) {
-  if (evt.request.url.includes("/api/")) {
-    evt.respondWith(
+self.addEventListener("fetch", e => {
+  if (e.request.url.includes("/api/")) {
+    e.respondWith(
       caches.open(DATA_CACHE_NAME).then(cache => {
-        return fetch(evt.request)
+        return fetch(e.request)
           .then(response => {
             // If the response was good, clone it and store it in the cache.
             if (response.status === 200) {
-              cache.put(evt.request.url, response.clone());
+              cache.put(e.request.url, response.clone());
             }
 
             return response;
           })
           .catch(err => {
             // Network request failed, try to get it from the cache.
-            return cache.match(evt.request);
+            return cache.match(e.request);
           });
       }).catch(err => console.log(err))
     );
@@ -71,10 +60,10 @@ self.addEventListener("fetch", function (evt) {
     return;
   }
 
-  evt.respondWith(
+  e.respondWith(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.match(evt.request).then(response => {
-        return response || fetch(evt.request);
+      return cache.match(e.request).then(response => {
+        return response || fetch(e.request);
       });
     })
   );
