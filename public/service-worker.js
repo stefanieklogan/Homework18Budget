@@ -43,14 +43,16 @@ self.addEventListener("activate", e => {
 
 // fetch
 self.addEventListener("fetch", e => {
-    if (
-      e.request.method !== "GET" || !e.request.url.startsWith(self.location.origin)
-    ) {
-      e.respondWith(fetch(e.request));
-      return;
-    }
-  })
+  // non GET requests are not cached and requests to other origins are not cached
+  if (
+    e.request.method !== "GET" ||
+    !e.request.url.startsWith(self.location.origin)
+  ) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
 
+  // handle runtime GET requests for data from /api routes
   if (e.request.url.includes("/api/transaction")) {
     // make network request and fallback to cache if network request fails (offline)
     e.respondWith(
@@ -83,3 +85,4 @@ self.addEventListener("fetch", e => {
       });
     })
   );
+});
