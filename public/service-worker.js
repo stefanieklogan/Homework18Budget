@@ -18,34 +18,39 @@ self.addEventListener("install", e => {
 
 });
 
-// activate
-self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys().then(keyList => {
-      return Promise.all(
-        keyList.map(key => {
-          if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
-            console.log("Removing old cache data", key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+// remove old cache data & activate
+self.addEventListener("activate", event => {
+  const currentCaches = [STATIC_CACHE, RUNTIME_CACHE];
+  event.waitUntil(
+    caches
+      .keys()
+      .then(cacheNames => {
+        // return array of cache names that are old to delete
+        return cacheNames.filter(
+          cacheName => !currentCaches.includes(cacheName)
+        );
+      })
+      .then(cachesToDelete => {
+        return Promise.all(
+          cachesToDelete.map(cacheToDelete => {
+            return caches.delete(cacheToDelete);
+          })
+        );
+      })
+      .then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
 
 // fetch
 self.addEventListener("fetch", e => {
-  if (e.request.url.includes("/api/")) {
+  if (e.request.url.includes("/api/transaction")) {
     e.respondWith(
-      caches.open(DATA_CACHE_NAME).then(cache => {
+      caches.open(RUNTIME_CACHE).then(cache => {
         return fetch(e.request)
           .then(response => {
             // If the response was good, clone it and store it in the cache.
             if (response.status === 200) {
-              cache.put(e.request.url, response.clone());
+              cache.put(e.request, response.clone());
             }
 
             return response;
