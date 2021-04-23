@@ -11,7 +11,7 @@
 <a name="application"></a>
 ## Application
 
-* Deployed application: xxxxxxxxxxxxxxx
+* Deployed application: https://quiet-forest-84116.herokuapp.com/
 
 ![homepage image](xxxxxxxxxxxxxxxxxxxx)
 
@@ -47,7 +47,7 @@
 <a name="notes"></a>
 ## Notes
 
-* Future development includes xxxxxxxxxxxxxxxxxxxxxxxxxx
+* Future development includes spending categories and the ability to set savings goals.
 
 <a name="streetcred"></a>
 ## The other stuff: License & Badges
