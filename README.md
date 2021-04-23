@@ -22,7 +22,7 @@
 
 * This app was built for David Rose, a cashmere loving, wool sweater wearing, luxury sheet buying soul who could use a budget. David is the icon of this app, maybe to remind a user to spend more prior to his days living in Schitts Creek with his family. 
 
-With the budget app, allow yourself real-time access to your budget no matter where you are - a plane, a train or a coffee shop. You're free to work offline and know your debits and credits will sync when you are able to connect online. It's peace of mind no matter where your financials take you. Otherwise, you might be up a creek.
+* With the budget app, allow yourself real-time access to your budget no matter where you are - a plane, a train or a coffee shop. You're free to work offline and know your debits and credits will sync when you are able to connect online. It's peace of mind no matter where your financials take you. Otherwise, you might be up a creek.
 
 <a name="depend"></a>
 ## Dependencies
@@ -42,11 +42,9 @@ With the budget app, allow yourself real-time access to your budget no matter wh
 
 * After cloning this repository, run 'npm install' for dependencies. 
 
-* Create a '.env' file with your MySQL port, username & password for 'budgetDB' database. 
+* Create a '.env' file with your MONGODB_URI value with username & password for 'budgetDB' database. 
 
-* Schema and seeds files are available and should be executed prior to application use. 
-
-* To run the application, enter 'node index.js' inside terminal. 
+* To run the application, enter 'node server' inside terminal. 
 
 <a name="notes"></a>
 ## Notes
